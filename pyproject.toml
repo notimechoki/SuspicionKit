@@ -4,15 +4,15 @@ build-backend = "hatchling.build"
 
 [project]
 name = "suspicionkit"
-version = "0.0.1"
-description = "A terminal-first URL suspicion checker with rich risk reports."
+version = "0.0.2"
+description = "A terminal-first threat analysis toolkit for suspicious links and web artifacts."
 readme = "README.md"
 requires-python = ">=3.10"
 license = "MIT"
 authors = [
-  { name = "notimechoki", email = "notime4oki@gmail.com" }
+  { name = "Art", email = "notime4oki@gmail.com" }
 ]
-keywords = ["security", "url", "phishing", "cli", "rich", "osint"]
+keywords = ["security", "url", "phishing", "cli", "rich", "osint", "whois", "ssl"]
 classifiers = [
   "Development Status :: 2 - Pre-Alpha",
   "Environment :: Console",
@@ -32,6 +32,8 @@ dependencies = [
   "tldextract>=5.1.0",
   "dnspython>=2.6.0",
   "idna>=3.6",
+  "python-whois>=0.9.4",
+  "beautifulsoup4>=4.12.0",
 ]
 
 [project.optional-dependencies]

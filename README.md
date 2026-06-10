@@ -3,7 +3,7 @@
 </p>
 
 <p align="center">
-  <img src="https://img.shields.io/badge/version-0.0.1-2ecc71?style=for-the-badge" alt="version" />
+  <img src="https://img.shields.io/badge/version-0.0.2-2ecc71?style=for-the-badge" alt="version" />
   <img src="https://img.shields.io/badge/python-3.10%2B-blue?style=for-the-badge" alt="python" />
   <img src="https://img.shields.io/badge/license-MIT-yellow?style=for-the-badge" alt="license" />
   <img src="https://img.shields.io/badge/CLI-Rich-purple?style=for-the-badge" alt="rich" />
@@ -13,24 +13,44 @@
 
 ## ✨ What is SuspicionKit?
 
-**SuspicionKit** is a small security-focused CLI tool that checks URLs for suspicious patterns and returns a clear risk report from **0 to 100**.
+**SuspicionKit** is a terminal-first threat analysis toolkit that helps you inspect suspicious URLs before opening them in a browser.
 
-It is not an antivirus and it does not promise perfect detection. Instead, it helps you quickly understand whether a URL looks normal, suspicious, or risky before you open it in a browser.
+It combines multiple signals into a readable risk report:
+
+- URL structure
+- domain signals
+- DNS checks
+- redirects
+- WHOIS/domain age
+- TLS certificate status
+- basic HTML/page inspection
+- phishing-style indicators
+
+SuspicionKit does **not** promise perfect detection. No lightweight CLI tool can guarantee that a URL is safe with 99% certainty. The goal is to give you a practical early-warning report and explain why a link looks normal, suspicious, or risky.
 
 ---
 
-## ⚡ Features in v0.0.1
+## ⚡ Features in v0.0.2
 
 - 🔗 URL normalization
 - 🔒 HTTPS check
-- 🌐 DNS availability check
+- 🌐 DNS resolution checks
 - 🧭 Redirect detection
 - 🕵️ URL shortener detection
 - 🧬 Punycode / IDN warning
 - 🚩 suspicious TLD detection
 - 🧾 sensitive query parameter detection
+- 🧠 brand impersonation heuristics
 - 📊 local popularity estimation
+- 🗓️ WHOIS/domain age checks
+- 🧑‍💼 registrar and domain expiry checks
+- 🔐 TLS certificate expiry checks
+- 🧪 basic HTML inspection
+- 🔑 password form detection
+- 🧰 external form action detection
+- 🧱 basic security header checks
 - 🎯 risk score from **0 to 100**
+- 📡 evidence confidence score
 - 🎨 beautiful terminal report powered by **Rich**
 - 📦 installable with **pipx**
 
@@ -38,39 +58,28 @@ It is not an antivirus and it does not promise perfect detection. Instead, it he
 
 ## 🖼️ Preview
 
-<img src="assets/example.png" alt="example" width="100%" />
-
-```bash
-suspicionkit url "https://example.com"
-```
-
-Example output:
-
-```text
-SuspicionKit URL Report
-
-Original:   https://example.com
-Normalized: https://example.com/
-Domain:     example.com
-Root domain: example.com
-
-Risk score: 5/100
-Risk level: LOW
-```
+<img src="assets/example.png" alt="SuspicionKit example report" width="100%" />
 
 ---
 
 ## 📦 Installation
 
-### Recommended: pipx
+### Install with pipx from GitHub
+
+SuspicionKit is currently installed directly from GitHub:
 
 ```bash
 python -m pip install --user pipx
 python -m pipx ensurepath
+```
+
+Restart your terminal after `ensurepath`, then install SuspicionKit:
+
+```bash
 pipx install git+https://github.com/notimechoki/suspicionkit.git
 ```
 
-After installation:
+Check that everything works:
 
 ```bash
 suspicionkit --version
@@ -84,7 +93,30 @@ skit --version
 
 ---
 
-## 🧪 Local development installation
+## 🔄 Upgrade
+
+```bash
+pipx upgrade suspicionkit
+```
+
+Or reinstall from GitHub:
+
+```bash
+pipx uninstall suspicionkit
+pipx install git+https://github.com/notimechoki/suspicionkit.git
+```
+
+---
+
+## 🗑️ Uninstall
+
+```bash
+pipx uninstall suspicionkit
+```
+
+---
+
+## 🧪 Local development
 
 Clone the repository:
 
@@ -106,23 +138,23 @@ Install in editable mode:
 pip install -e ".[dev]"
 ```
 
-Run the CLI:
-
-```bash
-suspicionkit url "https://github.com"
-```
-
 Run tests:
 
 ```bash
 pytest -q
 ```
 
+Run linting:
+
+```bash
+ruff check .
+```
+
 ---
 
 ## 🚀 Usage
 
-Check a URL with network checks:
+Check a URL with full network-based analysis:
 
 ```bash
 suspicionkit url "https://github.com"
@@ -131,22 +163,32 @@ suspicionkit url "https://github.com"
 Check a suspicious-looking URL:
 
 ```bash
-suspicionkit url "http://paypal-login-security.xyz/verify?token=123"
+suspicionkit url "https://paypal-login-security.xyz/verify?token=123"
 ```
 
-Run offline checks only:
+Run local-only checks without DNS, HTTP, WHOIS, TLS or content inspection:
 
 ```bash
 suspicionkit url "https://example.com" --no-network
 ```
 
-`--no-network` disables DNS and HTTP requests. This is useful when you want to inspect the URL without contacting the host.
+Run network checks but skip HTML body inspection:
+
+```bash
+suspicionkit url "https://example.com" --no-content
+```
+
+Set custom timeout:
+
+```bash
+suspicionkit url "https://example.com" --timeout 15
+```
 
 ---
 
 ## 🧠 How scoring works
 
-SuspicionKit starts with a score of `0` and adds or subtracts points based on checks.
+SuspicionKit starts with a score of `0` and adds or subtracts points based on collected signals.
 
 Examples:
 
@@ -156,6 +198,10 @@ Examples:
 - URL shorteners increase risk
 - punycode increases risk
 - sensitive query parameters increase risk
+- new domains increase risk
+- expired or broken TLS certificates increase risk
+- password forms increase risk
+- external form submissions increase risk
 - known popular domains lower risk slightly
 
 Final score:
@@ -167,6 +213,20 @@ Final score:
 | 56–80 | High |
 | 81–100 | Critical |
 
+SuspicionKit also shows **Evidence confidence**. This is not an accuracy guarantee. It only means how much evidence the tool managed to collect. For example, `--no-network` lowers confidence because WHOIS, DNS, TLS and HTTP checks are skipped.
+
+---
+
+## 🔒 Privacy note
+
+By default, SuspicionKit may contact the target host for DNS, HTTP, TLS and WHOIS checks. That can reveal your public IP address to the target infrastructure.
+
+For local-only inspection, use:
+
+```bash
+suspicionkit url "https://example.com" --no-network
+```
+
 ---
 
 ## 🧰 Tech stack
@@ -177,6 +237,8 @@ Final score:
 - **HTTPX** — HTTP probing
 - **tldextract** — domain parsing
 - **dnspython** — DNS checks
+- **python-whois** — WHOIS checks
+- **BeautifulSoup4** — basic HTML inspection
 - **pytest** — tests
 - **ruff** — linting
 
@@ -186,11 +248,16 @@ Final score:
 
 SuspicionKit is an early-warning tool. It cannot guarantee that a URL is safe or dangerous.
 
-Any website you open can usually see your public IP address. SuspicionKit does not open the page in a browser, but network checks still contact the host. Use `--no-network` if you want local-only checks.
+It is not an antivirus, browser sandbox, malware scanner, or replacement for professional threat intelligence services.
+
+---
+
+## Changelog
+
+See [CHANGELOG.md](CHANGELOG.md).
 
 ---
 
 ## 📄 License
 
 MIT License.
-

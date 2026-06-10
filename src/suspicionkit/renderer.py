@@ -7,6 +7,7 @@ from rich.progress_bar import ProgressBar
 from rich.table import Table
 from rich.text import Text
 
+from suspicionkit import __version__
 from suspicionkit.models import RiskLevel, UrlReport
 
 
@@ -17,7 +18,7 @@ def render_report(report: UrlReport) -> None:
     title = Text("SuspicionKit URL Report", style=f"bold {color}")
 
     console.print()
-    console.print(Panel(title, subtitle="v0.0.1", box=box.ROUNDED, border_style=color))
+    console.print(Panel(title, subtitle=f"v{__version__}", box=box.ROUNDED, border_style=color))
 
     console.print(f"[bold]Original:[/bold]   {report.original_url}")
     console.print(f"[bold]Normalized:[/bold] {report.normalized_url}")
@@ -29,6 +30,7 @@ def render_report(report: UrlReport) -> None:
     console.print(score_text)
     console.print(ProgressBar(total=100, completed=report.score, width=50, pulse=False))
     console.print(f"Risk level: [{color} bold]{report.risk_level.value.upper()}[/{color} bold]")
+    console.print(f"Evidence confidence: [bold]{report.confidence}/100[/bold]")
     console.print()
 
     table = Table(title="Checks", box=box.SIMPLE_HEAVY)

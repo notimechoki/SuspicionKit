@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from urllib.parse import urlparse, urlunparse
 
+
 def normalize_url(raw_url: str) -> str:
     value = raw_url.strip()
 

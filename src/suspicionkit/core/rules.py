@@ -14,6 +14,10 @@ SUSPICIOUS_TLDS = {
     "cf",
     "work",
     "rest",
+    "live",
+    "support",
+    "quest",
+    "cam",
 }
 
 SHORTENER_DOMAINS = {
@@ -27,6 +31,8 @@ SHORTENER_DOMAINS = {
     "cutt.ly",
     "shorturl.at",
     "rebrand.ly",
+    "lnkd.in",
+    "s.id",
 }
 
 POPULAR_DOMAINS = {
@@ -47,6 +53,9 @@ POPULAR_DOMAINS = {
     "netflix.com",
     "openai.com",
     "cloudflare.com",
+    "github.io",
+    "python.org",
+    "pypi.org",
 }
 
 BRAND_DOMAINS = {
@@ -57,6 +66,7 @@ BRAND_DOMAINS = {
     "apple.com": ["apple", "appIe"],
     "instagram.com": ["instagram", "instagrarn"],
     "facebook.com": ["facebook", "facebo0k"],
+    "openai.com": ["openai", "chatgpt"],
 }
 
 SUSPICIOUS_KEYWORDS = {
@@ -79,6 +89,17 @@ SUSPICIOUS_KEYWORDS = {
     "secure",
     "security",
     "update",
+    "support",
+    "unlock",
+    "limited",
+    "suspend",
+    "blocked",
+    "recover",
+    "airdrop",
+    "crypto",
+    "bonus",
+    "gift",
+    "prize",
 }
 
 TRACKING_PARAMS = {
@@ -108,4 +129,22 @@ SENSITIVE_PARAMS = {
     "return",
     "next",
     "continue",
+    "code",
+    "otp",
+    "pin",
+}
+
+SUSPICIOUS_CONTENT_KEYWORDS = {
+    "password",
+    "verify your account",
+    "confirm your account",
+    "update your payment",
+    "security check",
+    "account suspended",
+    "limited access",
+    "seed phrase",
+    "recovery phrase",
+    "private key",
+    "one-time code",
+    "otp",
 }
