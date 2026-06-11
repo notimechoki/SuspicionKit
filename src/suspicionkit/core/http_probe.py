@@ -4,6 +4,8 @@ from dataclasses import dataclass, field
 
 import httpx
 
+from suspicionkit import __version__
+
 
 @dataclass
 class RedirectHop:
@@ -37,7 +39,7 @@ def probe_url(
         with httpx.Client(
             timeout=timeout,
             follow_redirects=follow_redirects,
-            headers={"User-Agent": "SuspicionKit/0.0.2"},
+            headers={"User-Agent": f"SuspicionKit/{__version__}"},
         ) as client:
             response = client.get(url)
 

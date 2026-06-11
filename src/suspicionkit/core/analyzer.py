@@ -15,6 +15,7 @@ from suspicionkit.core.normalizer import normalize_url
 from suspicionkit.core.popularity import estimate_popularity
 from suspicionkit.core.rules import (
     BRAND_DOMAINS,
+    LEGITIMATE_DOMAINS,
     SENSITIVE_PARAMS,
     SHORTENER_DOMAINS,
     SUSPICIOUS_KEYWORDS,
@@ -137,7 +138,7 @@ def analyze_url(
         registered_domain=registered_domain,
         score=final_score,
         risk_level=level_from_score(final_score),
-        confidence=confidence,
+        evidence_coverage=confidence,
         checks=checks,
         warnings=warnings,
         notes=notes,
@@ -157,7 +158,7 @@ def _run_static_checks(
     if parsed.scheme == "https":
         add_check("HTTPS", "ok", "URL uses HTTPS.", -5)
     else:
-        add_check("HTTPS", "warning", "URL does not use HTTPS.", 18)
+        add_check("HTTPS", "warning", "URL uses HTTP, not HTTPS.", 10)
 
     try:
         ip = ipaddress.ip_address(host)
@@ -234,11 +235,11 @@ def _run_static_checks(
         add_check(
             "Suspicious keywords",
             "warning",
-            "Found sensitive words: " + ", ".join(found_keywords[:10]),
+            "Found suspicious words: " + ", ".join(found_keywords[:10]),
             min(24, len(found_keywords) * 4),
         )
     else:
-        add_check("Suspicious keywords", "ok", "No sensitive keywords detected.", 0)
+        add_check("Suspicious keywords", "ok", "No suspicious keywords detected.", 0)
 
     params = parse_qs(parsed.query)
     tracking_found = []
@@ -272,7 +273,7 @@ def _run_static_checks(
             "Sensitive parameters",
             "warning",
             "Sensitive-looking parameters found: " + ", ".join(sensitive_found),
-            15,
+            min(16, len(sensitive_found) * 8),
         )
     else:
         add_check("Sensitive parameters", "ok", "No sensitive-looking parameters found.", 0)
@@ -509,6 +510,9 @@ def _run_content_checks(add_check, html: str, base_url: str) -> None:
 
 
 def _check_brand_impersonation(host: str, registered_domain: str) -> str | None:
+    if registered_domain in LEGITIMATE_DOMAINS:
+        return None
+
     compact_host = re.sub(r"[^a-zA-Z0-9]", "", host.lower())
 
     for real_domain, brand_variants in BRAND_DOMAINS.items():

@@ -3,7 +3,7 @@
 </p>
 
 <p align="center">
-  <img src="https://img.shields.io/badge/version-0.0.2-2ecc71?style=for-the-badge" alt="version" />
+  <img src="https://img.shields.io/badge/version-0.0.3-2ecc71?style=for-the-badge" alt="version" />
   <img src="https://img.shields.io/badge/python-3.10%2B-blue?style=for-the-badge" alt="python" />
   <img src="https://img.shields.io/badge/license-MIT-yellow?style=for-the-badge" alt="license" />
   <img src="https://img.shields.io/badge/CLI-Rich-purple?style=for-the-badge" alt="rich" />
@@ -30,7 +30,7 @@ SuspicionKit does **not** promise perfect detection. No lightweight CLI tool can
 
 ---
 
-## ⚡ Features in v0.0.2
+## ⚡ Features in v0.0.3
 
 - 🔗 URL normalization
 - 🔒 HTTPS check
@@ -50,8 +50,11 @@ SuspicionKit does **not** promise perfect detection. No lightweight CLI tool can
 - 🧰 external form action detection
 - 🧱 basic security header checks
 - 🎯 risk score from **0 to 100**
-- 📡 evidence confidence score
+- 📡 evidence coverage score
 - 🎨 beautiful terminal report powered by **Rich**
+- 🧾 JSON output for automation
+- 💾 save JSON reports with `--output`
+- ✅ legitimate-domain allowlist to reduce false positives
 - 📦 installable with **pipx**
 
 ---
@@ -163,7 +166,7 @@ suspicionkit url "https://github.com"
 Check a suspicious-looking URL:
 
 ```bash
-suspicionkit url "https://paypal-login-security.xyz/verify?token=123"
+suspicionkit url "http://delivery-track-support.top/track?token=123"
 ```
 
 Run local-only checks without DNS, HTTP, WHOIS, TLS or content inspection:
@@ -182,6 +185,18 @@ Set custom timeout:
 
 ```bash
 suspicionkit url "https://example.com" --timeout 15
+```
+
+Print a machine-readable JSON report:
+
+```bash
+suspicionkit url "http://delivery-track-support.top/track?token=123" --json
+```
+
+Save a JSON report to a file:
+
+```bash
+suspicionkit url "http://delivery-track-support.top/track?token=123" --json --output reports/url-report.json
 ```
 
 ---
@@ -213,7 +228,7 @@ Final score:
 | 56–80 | High |
 | 81–100 | Critical |
 
-SuspicionKit also shows **Evidence confidence**. This is not an accuracy guarantee. It only means how much evidence the tool managed to collect. For example, `--no-network` lowers confidence because WHOIS, DNS, TLS and HTTP checks are skipped.
+SuspicionKit also shows **Evidence coverage**. This is not an accuracy guarantee. It only means how much evidence the tool managed to collect. For example, `--no-network` lowers coverage because WHOIS, DNS, TLS and HTTP checks are skipped.
 
 ---
 

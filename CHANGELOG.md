@@ -1,5 +1,29 @@
 # Changelog
 
+## [0.0.3] - 2026-06-11
+
+### Added
+
+- Added `--json` output mode for machine-readable reports.
+- Added `--output` / `-o` for saving JSON reports to a file.
+- Added JSON serialization helpers with stable report fields.
+- Added a legitimate-domain allowlist to reduce brand-impersonation false positives.
+- Added tests for JSON reports, unsupported URL schemes, GitLab false positives and delivery-style suspicious URLs.
+
+### Changed
+
+- Renamed user-facing `Evidence confidence` to `Evidence coverage`.
+- Updated package version from `0.0.2` to `0.0.3`.
+- Updated the built-in popularity text so it no longer references old internal versions.
+- Updated the HTTP User-Agent to use the package version dynamically.
+- Improved suspicious delivery/shipping keyword coverage.
+- Reduced the HTTP-only URL penalty to make scoring less aggressive for static-only checks.
+
+### Fixed
+
+- Fixed a false positive where `gitlab.com` could be treated as GitHub impersonation.
+- Rejected non-HTTP URL schemes during normalization instead of accepting unsupported targets.
+
 ## [0.0.2] - 2026-06-10
 
 ### Added

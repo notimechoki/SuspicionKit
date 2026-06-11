@@ -30,7 +30,7 @@ def render_report(report: UrlReport) -> None:
     console.print(score_text)
     console.print(ProgressBar(total=100, completed=report.score, width=50, pulse=False))
     console.print(f"Risk level: [{color} bold]{report.risk_level.value.upper()}[/{color} bold]")
-    console.print(f"Evidence confidence: [bold]{report.confidence}/100[/bold]")
+    console.print(f"Evidence coverage: [bold]{report.evidence_coverage}/100[/bold]")
     console.print()
 
     table = Table(title="Checks", box=box.SIMPLE_HEAVY)

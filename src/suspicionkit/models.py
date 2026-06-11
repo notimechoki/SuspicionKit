@@ -10,12 +10,14 @@ class RiskLevel(str, Enum):
     HIGH = "high"
     CRITICAL = "critical"
 
+
 @dataclass
 class Check:
     name: str
     status: str
     details: str
     score_delta: int = 0
+
 
 @dataclass
 class UrlReport:
@@ -25,7 +27,11 @@ class UrlReport:
     registered_domain: str
     score: int
     risk_level: RiskLevel
-    confidence: int
+    evidence_coverage: int
     checks: list[Check] = field(default_factory=list)
     warnings: list[str] = field(default_factory=list)
     notes: list[str] = field(default_factory=list)
+
+    @property
+    def confidence(self) -> int:
+        return self.evidence_coverage

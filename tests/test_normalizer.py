@@ -14,3 +14,8 @@ def test_normalize_keeps_query():
 def test_empty_url_fails():
     with pytest.raises(ValueError):
         normalize_url("   ")
+
+
+def test_unsupported_scheme_fails():
+    with pytest.raises(ValueError):
+        normalize_url("javascript:alert(1)")
